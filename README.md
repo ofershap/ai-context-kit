@@ -19,6 +19,8 @@
   <a href="#quick-start"><img src="https://img.shields.io/badge/Install-3b82f6?style=for-the-badge&logoColor=white" alt="Install" /></a>
   &nbsp;
   <a href="#quick-start"><img src="https://img.shields.io/badge/See_Example_Output-8b5cf6?style=for-the-badge&logoColor=white" alt="See Example Output" /></a>
+  &nbsp;
+  <a href="https://github.com/ofershap/ai-context-kit/discussions/1"><img src="https://img.shields.io/badge/Vote_on_Next_Features-f97316?style=for-the-badge&logoColor=white" alt="Vote on Next Features" /></a>
 </p>
 
 <p align="center">
