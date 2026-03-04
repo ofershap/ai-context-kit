@@ -6,10 +6,10 @@ import { init } from "./init.js";
 import type { RuleFormat } from "./types.js";
 
 const HELP = `
-contextkit - Intelligent context management for AI coding agents
+ai-context-kit - Intelligent context management for AI coding agents
 
 Usage:
-  contextkit <command> [options]
+  ai-context-kit <command> [options]
 
 Commands:
   lint      Lint rules for quality issues, conflicts, and token waste
@@ -39,7 +39,7 @@ async function runLint(args: string[]): Promise<void> {
   const rules = await loadRules(path);
 
   if (rules.length === 0) {
-    console.log("No rule files found. Run `contextkit init` to get started.");
+    console.log("No rule files found. Run `ai-context-kit init` to get started.");
     process.exit(0);
   }
 
@@ -50,7 +50,7 @@ async function runLint(args: string[]): Promise<void> {
     return;
   }
 
-  console.log(`\ncontextkit lint - ${rules.length} rule file(s) found\n`);
+  console.log(`\nai-context-kit lint - ${rules.length} rule file(s) found\n`);
 
   if (report.issues.length === 0) {
     console.log("  No issues found.\n");
@@ -83,7 +83,7 @@ async function runMeasure(args: string[]): Promise<void> {
   const rules = await loadRules(path);
 
   if (rules.length === 0) {
-    console.log("No rule files found. Run `contextkit init` to get started.");
+    console.log("No rule files found. Run `ai-context-kit init` to get started.");
     process.exit(0);
   }
 
@@ -94,7 +94,7 @@ async function runMeasure(args: string[]): Promise<void> {
     return;
   }
 
-  console.log(`\ncontextkit measure - ${rules.length} rule file(s)\n`);
+  console.log(`\nai-context-kit measure - ${rules.length} rule file(s)\n`);
   console.log(`  Total: ${formatNumber(report.totalTokens)} tokens\n`);
 
   for (const rule of report.rules) {
@@ -120,9 +120,9 @@ async function runSync(args: string[]): Promise<void> {
   const json = args.includes("--json");
 
   if (!source || !targetStr) {
-    console.error("Usage: contextkit sync --source <path> --target <paths>");
+    console.error("Usage: ai-context-kit sync --source <path> --target <paths>");
     console.error(
-      "Example: contextkit sync --source .cursor/rules/ --target CLAUDE.md,AGENTS.md",
+      "Example: ai-context-kit sync --source .cursor/rules/ --target CLAUDE.md,AGENTS.md",
     );
     process.exit(1);
     return;
@@ -136,7 +136,7 @@ async function runSync(args: string[]): Promise<void> {
     return;
   }
 
-  console.log(`\ncontextkit sync${dryRun ? " (dry run)" : ""}\n`);
+  console.log(`\nai-context-kit sync${dryRun ? " (dry run)" : ""}\n`);
 
   for (const result of results) {
     const status = result.written
@@ -158,8 +158,8 @@ async function runInit(args: string[]): Promise<void> {
   const created = await init({ path: path ?? ".", format });
   console.log(`\nCreated: ${created}\n`);
   console.log("Edit this file with your project-specific rules, then run:");
-  console.log("  contextkit lint     # check for issues");
-  console.log("  contextkit measure  # see token cost\n");
+  console.log("  ai-context-kit lint     # check for issues");
+  console.log("  ai-context-kit measure  # see token cost\n");
 }
 
 function getFlagValue(args: string[], flag: string): string | undefined {

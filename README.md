@@ -1,4 +1,4 @@
-<h1 align="center">contextkit</h1>
+<h1 align="center">ai-context-kit</h1>
 
 <p align="center">
   <strong>How do you measure your context?</strong>
@@ -20,9 +20,9 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/contextkit-ai"><img src="https://img.shields.io/npm/v/contextkit-ai.svg" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/contextkit-ai"><img src="https://img.shields.io/npm/dm/contextkit-ai.svg" alt="npm downloads" /></a>
-  <a href="https://github.com/ofershap/contextkit/actions/workflows/ci.yml"><img src="https://github.com/ofershap/contextkit/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://www.npmjs.com/package/ai-context-kit"><img src="https://img.shields.io/npm/v/ai-context-kit.svg" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/ai-context-kit"><img src="https://img.shields.io/npm/dm/ai-context-kit.svg" alt="npm downloads" /></a>
+  <a href="https://github.com/ofershap/ai-context-kit/actions/workflows/ci.yml"><img src="https://github.com/ofershap/ai-context-kit/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-blue" alt="TypeScript" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
   <a href="https://img.shields.io/badge/dependencies-0-brightgreen"><img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="zero dependencies" /></a>
@@ -44,7 +44,7 @@ An [ETH Zurich study](https://www.sri.inf.ethz.ch/publications/gloaguen2026agent
 The fix isn't better writing. It's treating context like a budget - measure it, trim it, inject only what the current task needs.
 
 ```typescript
-import { loadRules, measure, lint, select } from "contextkit-ai";
+import { loadRules, measure, lint, select } from "ai-context-kit";
 
 const rules = await loadRules("./");
 
@@ -61,17 +61,17 @@ select(rules, {
 ## Quick Start
 
 ```bash
-npm install contextkit-ai
+npm install ai-context-kit
 ```
 
 Run the CLI on any project to see what you're actually injecting:
 
 ```bash
-npx contextkit measure
+npx ai-context-kit measure
 ```
 
 ```
-contextkit measure - 6 rule file(s)
+ai-context-kit measure - 6 rule file(s)
 
   Total: 4,821 tokens
 
@@ -86,11 +86,11 @@ contextkit measure - 6 rule file(s)
 Then lint it:
 
 ```bash
-npx contextkit lint
+npx ai-context-kit lint
 ```
 
 ```
-contextkit lint - 6 rule file(s)
+ai-context-kit lint - 6 rule file(s)
 
   [!] .cursor/rules/conventions.mdc
       Rule is 2100 tokens. Consider splitting to keep each file under 2000 tokens.
@@ -123,7 +123,7 @@ That's the difference between guessing and knowing.
 
 ## How It Works
 
-contextkit reads every context file format in the ecosystem, parses frontmatter, estimates token cost, and gives you tools to analyze and manage them.
+ai-context-kit reads every context file format in the ecosystem, parses frontmatter, estimates token cost, and gives you tools to analyze and manage them.
 
 | | |
 |---|---|
@@ -221,13 +221,13 @@ await init({ format: "cursor-rules" });
 ## CLI
 
 ```bash
-npx contextkit lint                    # find issues
-npx contextkit lint --json             # machine-readable output
-npx contextkit measure                 # token cost breakdown
-npx contextkit measure --budget 4000   # check against budget
-npx contextkit sync --source .cursor/rules/ --target CLAUDE.md,AGENTS.md
-npx contextkit init                    # scaffold starter rules
-npx contextkit init --format claude-md
+npx ai-context-kit lint                    # find issues
+npx ai-context-kit lint --json             # machine-readable output
+npx ai-context-kit measure                 # token cost breakdown
+npx ai-context-kit measure --budget 4000   # check against budget
+npx ai-context-kit sync --source .cursor/rules/ --target CLAUDE.md,AGENTS.md
+npx ai-context-kit init                    # scaffold starter rules
+npx ai-context-kit init --format claude-md
 ```
 
 All commands support `--path <dir>` to point at a different project root. `lint` exits with code 1 on errors (warnings pass).
@@ -236,10 +236,10 @@ All commands support `--path <dir>` to point at a different project root. `lint`
 
 ## Use with Vercel AI SDK / LangChain / Custom Agents
 
-This isn't just for Cursor. If you're building agents with Vercel AI SDK, LangChain, or your own framework, contextkit solves the same problem: how much context are you stuffing into the system prompt, and is it helping or hurting?
+This isn't just for Cursor. If you're building agents with Vercel AI SDK, LangChain, or your own framework, ai-context-kit solves the same problem: how much context are you stuffing into the system prompt, and is it helping or hurting?
 
 ```typescript
-import { loadRules, select } from "contextkit-ai";
+import { loadRules, select } from "ai-context-kit";
 import { generateText } from "ai";
 
 const allRules = await loadRules("./rules");
@@ -274,7 +274,7 @@ Any framework that takes a system prompt string. Any rules stored as markdown fi
 | Windsurf | `.windsurfrules` | Windsurf |
 | Cline | `.clinerules` | Cline |
 
-contextkit detects the format from the file path. No configuration needed.
+ai-context-kit detects the format from the file path. No configuration needed.
 
 ---
 
@@ -288,14 +288,14 @@ The ETH Zurich study tested both human-written and LLM-generated context files. 
 <details>
 <summary><strong>How accurate is the token estimation?</strong></summary>
 
-contextkit uses a 4-character-per-token approximation. This is intentionally simple and fast. It's accurate enough for budgeting and comparison (GPT-4 averages ~4 chars/token for English text). If you need exact counts, pipe the output through tiktoken or your model's tokenizer.
+ai-context-kit uses a 4-character-per-token approximation. This is intentionally simple and fast. It's accurate enough for budgeting and comparison (GPT-4 averages ~4 chars/token for English text). If you need exact counts, pipe the output through tiktoken or your model's tokenizer.
 
 </details>
 
 <details>
 <summary><strong>Does this work in CI?</strong></summary>
 
-Yes. `npx contextkit lint` returns exit code 1 on errors, 0 on pass. Add it to your CI pipeline the same way you'd add eslint. The `--json` flag gives machine-readable output for custom reporting.
+Yes. `npx ai-context-kit lint` returns exit code 1 on errors, 0 on pass. Add it to your CI pipeline the same way you'd add eslint. The `--json` flag gives machine-readable output for custom reporting.
 
 </details>
 

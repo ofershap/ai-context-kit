@@ -8,7 +8,7 @@ describe("loadRules", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await mkdtemp(join(tmpdir(), "contextkit-test-"));
+    tempDir = await mkdtemp(join(tmpdir(), "ai-context-kit-test-"));
   });
 
   afterEach(async () => {

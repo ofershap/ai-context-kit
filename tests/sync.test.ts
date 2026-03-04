@@ -8,7 +8,7 @@ describe("sync", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await mkdtemp(join(tmpdir(), "contextkit-sync-"));
+    tempDir = await mkdtemp(join(tmpdir(), "ai-context-kit-sync-"));
   });
 
   afterEach(async () => {

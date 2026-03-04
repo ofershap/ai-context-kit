@@ -1,5 +1,5 @@
 {
-  "name": "contextkit-ai",
+  "name": "ai-context-kit",
   "version": "0.1.0",
   "description": "Intelligent context management for AI coding agents. Load, lint, measure, and sync rules across Cursor, Claude Code, Copilot, and any AI tool.",
   "type": "module",
@@ -19,7 +19,7 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "contextkit": "./dist/cli.js"
+    "ai-context-kit": "./dist/cli.js"
   },
   "files": [
     "dist"
@@ -67,12 +67,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ofershap/contextkit.git"
+    "url": "https://github.com/ofershap/ai-context-kit.git"
   },
   "bugs": {
-    "url": "https://github.com/ofershap/contextkit/issues"
+    "url": "https://github.com/ofershap/ai-context-kit/issues"
   },
-  "homepage": "https://github.com/ofershap/contextkit#readme",
+  "homepage": "https://github.com/ofershap/ai-context-kit#readme",
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@types/node": "^25.3.3",
