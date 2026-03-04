@@ -5,7 +5,7 @@
 <h1 align="center">ai-context-kit</h1>
 
 <p align="center">
-  <strong>How do you measure your context?</strong>
+  <strong>How do you measure the token cost of your context?</strong>
 </p>
 
 <p align="center">
@@ -14,13 +14,11 @@
 </p>
 
 <p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Quick_Start-grey?style=for-the-badge" alt="Quick Start" /></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/Try_It_Now-4ade80?style=for-the-badge&logoColor=white" alt="Try It Now" /></a>
   &nbsp;
-  <a href="#api"><img src="https://img.shields.io/badge/API-grey?style=for-the-badge" alt="API" /></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/Install-grey?style=for-the-badge" alt="Install" /></a>
   &nbsp;
-  <a href="#cli"><img src="https://img.shields.io/badge/CLI-grey?style=for-the-badge" alt="CLI" /></a>
-  &nbsp;
-  <a href="#use-with-vercel-ai-sdk--langchain--custom-agents"><img src="https://img.shields.io/badge/Vercel_AI_SDK-grey?style=for-the-badge" alt="Vercel AI SDK" /></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/See_Example_Output-grey?style=for-the-badge" alt="See Example Output" /></a>
 </p>
 
 <p align="center">
@@ -31,7 +29,6 @@
   <a href="https://github.com/ofershap/ai-context-kit/actions/workflows/ci.yml"><img src="https://github.com/ofershap/ai-context-kit/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-blue" alt="TypeScript" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
-  <a href="https://img.shields.io/badge/dependencies-0-brightgreen"><img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="zero dependencies" /></a>
   <a href="https://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" /></a>
 </p>
 

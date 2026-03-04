@@ -6,14 +6,10 @@
     </linearGradient>
   </defs>
 
-  <!-- Dark circular background -->
-  <circle cx="100" cy="100" r="96" fill="url(#bg)" stroke="#2a2a4a" stroke-width="2"/>
+  <!-- Dark circular background with visible border -->
+  <circle cx="100" cy="100" r="94" fill="url(#bg)" stroke="#4a4a6a" stroke-width="3"/>
 
   <!-- Gauge: 240-degree arc opening at the bottom -->
-  <!-- Arc from 150deg to 30deg (going clockwise through top) -->
-  <!-- Start point: (100 + 55*cos(150deg), 95 + 55*sin(150deg)) = (52.4, 122.5) -->
-  <!-- End point:   (100 + 55*cos(30deg),  95 + 55*sin(30deg))  = (147.6, 122.5) -->
-
   <!-- Track (grey background) -->
   <path d="M 52.4 122.5 A 55 55 0 1 1 147.6 122.5" fill="none" stroke="#2a2a4a" stroke-width="10" stroke-linecap="round"/>
 
