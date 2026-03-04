@@ -39,7 +39,9 @@ async function runLint(args: string[]): Promise<void> {
   const rules = await loadRules(path);
 
   if (rules.length === 0) {
-    console.log("No rule files found. Run `ai-context-kit init` to get started.");
+    console.log(
+      "No rule files found. Run `ai-context-kit init` to get started.",
+    );
     process.exit(0);
   }
 
@@ -83,7 +85,9 @@ async function runMeasure(args: string[]): Promise<void> {
   const rules = await loadRules(path);
 
   if (rules.length === 0) {
-    console.log("No rule files found. Run `ai-context-kit init` to get started.");
+    console.log(
+      "No rule files found. Run `ai-context-kit init` to get started.",
+    );
     process.exit(0);
   }
 
@@ -120,7 +124,9 @@ async function runSync(args: string[]): Promise<void> {
   const json = args.includes("--json");
 
   if (!source || !targetStr) {
-    console.error("Usage: ai-context-kit sync --source <path> --target <paths>");
+    console.error(
+      "Usage: ai-context-kit sync --source <path> --target <paths>",
+    );
     console.error(
       "Example: ai-context-kit sync --source .cursor/rules/ --target CLAUDE.md,AGENTS.md",
     );

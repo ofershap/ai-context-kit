@@ -33,33 +33,29 @@
 
 ---
 
-## The Problem I Kept Running Into
+You write a CLAUDE.md. Then someone adds `.cursor/rules/`. Then a teammate drops in an AGENTS.md. Then someone copies in a `.cursorrules` file from a blog post. Nobody removes the old ones.
 
-I have 30+ repos. Each one accumulated context files over time - a CLAUDE.md here, some `.cursor/rules/` there, an AGENTS.md someone copied from a blog post. Nobody cleaned up the old ones.
+Six months later your project has four context files that overlap, contradict each other, and dump 8,000 tokens of directory listings and "follow best practices" into every conversation. Your agent follows all of it. It gets slower. It gets confused. You blame the model.
 
-One day I ran the numbers. A single project was injecting 8,000 tokens of context into every conversation. Half of it was directory listings. Two files contradicted each other on semicolons. A third one just said "follow best practices."
+An [ETH Zurich study](https://www.sri.inf.ethz.ch/publications/gloaguen2026agentsmd) (February 2026) measured what actually happens when you give agents context files:
 
-My agent was slower, more expensive, and made worse decisions. I blamed Claude. Turns out I was poisoning it.
+- Auto-generated context files **reduced** task success compared to providing nothing
+- Human-written ones only improved accuracy by **4%**
+- Inference costs jumped **20%+** from wasted tokens
+- Performance dropped on some models because agents got **too obedient** - following unnecessary instructions instead of solving the actual problem
 
-An [ETH Zurich study](https://www.sri.inf.ethz.ch/publications/gloaguen2026agentsmd) from February 2026 confirmed what I was seeing:
-
-- Auto-generated context files **reduced** task success vs. providing nothing
-- Human-written ones helped by only **4%**
-- Inference costs went up **20%+** from wasted tokens
-- Some models got **too obedient** - following pointless instructions instead of solving the actual problem
-
-So I built `ai-context-kit` to treat context like a budget. Measure it, find the waste, inject only what the current task actually needs.
+I kept hitting this in my own projects, so I built `ai-context-kit` - a toolkit to treat context like a budget. Measure it, trim it, inject only what the current task needs.
 
 ```typescript
 import { loadRules, measure, lint, select } from "ai-context-kit";
 
 const rules = await loadRules("./");
 
-measure(rules, 4000);       // what does your context cost?
-lint(rules);                 // conflicts? duplicates? dead weight?
+measure(rules, 4000); // what does your context cost?
+lint(rules); // conflicts? duplicates? dead weight?
 select(rules, {
-  task: "fix auth bug",      // only inject what matters
-  budget: 2000,              // stay within token budget
+  task: "fix auth bug", // only inject what matters
+  budget: 2000, // stay within token budget
 });
 ```
 
@@ -121,14 +117,14 @@ That's the difference between guessing and knowing.
 
 ## What's Different
 
-| | Other approaches | ai-context-kit |
-|---|---|---|
-| Context cost | Nobody measures it | Token count per file with budget check |
-| Conflicts | You find out when the agent does something weird | Detects contradictions across all files automatically |
-| Duplicates | Same rule in 3 files, 3x the tokens | Flagged and scored |
-| Task relevance | Every rule injected every time | `select()` picks only what matters for the current task |
-| Multi-tool | Locked to one IDE's format | Works across Cursor, Claude Code, Copilot, Windsurf, Cline |
-| CI | Hope for the best | `lint` exits with code 1 on errors. Drop it in your pipeline |
+|                | Other approaches                                 | ai-context-kit                                               |
+| -------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| Context cost   | Nobody measures it                               | Token count per file with budget check                       |
+| Conflicts      | You find out when the agent does something weird | Detects contradictions across all files automatically        |
+| Duplicates     | Same rule in 3 files, 3x the tokens              | Flagged and scored                                           |
+| Task relevance | Every rule injected every time                   | `select()` picks only what matters for the current task      |
+| Multi-tool     | Locked to one IDE's format                       | Works across Cursor, Claude Code, Copilot, Windsurf, Cline   |
+| CI             | Hope for the best                                | `lint` exits with code 1 on errors. Drop it in your pipeline |
 
 ---
 
@@ -145,14 +141,14 @@ That's the difference between guessing and knowing.
 
 ai-context-kit reads every context file format in the ecosystem, parses frontmatter, estimates token cost, and gives you tools to analyze and manage them.
 
-| | |
-|---|---|
+|               |                                                                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `loadRules()` | Auto-detects `.cursor/rules/`, `.cursorrules`, `CLAUDE.md`, `AGENTS.md`, `copilot-instructions.md`, `.windsurfrules`, `.clinerules` |
-| `measure()` | Token cost per rule, percentage of total, budget check |
-| `lint()` | Conflicts, duplicates, bloat, vague instructions, useless directory trees. Scores 0-100 |
-| `select()` | Picks rules relevant to the current task. Respects a token budget. `alwaysApply` rules first, then by relevance |
-| `sync()` | Single source of truth. Write once in `.cursor/rules/`, sync to CLAUDE.md, AGENTS.md, and the rest |
-| `init()` | Starter template with tips from the research |
+| `measure()`   | Token cost per rule, percentage of total, budget check                                                                              |
+| `lint()`      | Conflicts, duplicates, bloat, vague instructions, useless directory trees. Scores 0-100                                             |
+| `select()`    | Picks rules relevant to the current task. Respects a token budget. `alwaysApply` rules first, then by relevance                     |
+| `sync()`      | Single source of truth. Write once in `.cursor/rules/`, sync to CLAUDE.md, AGENTS.md, and the rest                                  |
+| `init()`      | Starter template with tips from the research                                                                                        |
 
 ---
 
@@ -175,9 +171,9 @@ Returns `RuleFile[]` with parsed frontmatter, body, format, path, and token coun
 ```typescript
 const report = measure(rules, 4000);
 
-report.totalTokens;   // 3847
-report.overBudget;    // false
-report.rules;         // sorted by size, each with tokens + percentage
+report.totalTokens; // 3847
+report.overBudget; // false
+report.rules; // sorted by size, each with tokens + percentage
 ```
 
 ### `lint(rules)`
@@ -185,21 +181,21 @@ report.rules;         // sorted by size, each with tokens + percentage
 ```typescript
 const report = lint(rules);
 
-report.score;    // 85/100
-report.passed;   // true (no errors, warnings don't fail)
-report.issues;   // array of { rule, path, severity, message }
+report.score; // 85/100
+report.passed; // true (no errors, warnings don't fail)
+report.issues; // array of { rule, path, severity, message }
 ```
 
 What the linter catches:
 
-| Rule | Severity | What it finds |
-|---|---|---|
-| `token-budget` | warning/error | Files over 2,000 tokens (warning) or 5,000 (error) |
-| `empty-rule` | warning | Files too short to do anything |
-| `duplicate-content` | warning | Same instruction repeated across files |
-| `conflict` | error | "always use X" in one file, "never use X" in another |
-| `directory-listing` | warning | 10+ line directory trees that agents don't need |
-| `vague-instruction` | info | "follow best practices", "write clean code", "be consistent" |
+| Rule                | Severity      | What it finds                                                |
+| ------------------- | ------------- | ------------------------------------------------------------ |
+| `token-budget`      | warning/error | Files over 2,000 tokens (warning) or 5,000 (error)           |
+| `empty-rule`        | warning       | Files too short to do anything                               |
+| `duplicate-content` | warning       | Same instruction repeated across files                       |
+| `conflict`          | error         | "always use X" in one file, "never use X" in another         |
+| `directory-listing` | warning       | 10+ line directory trees that agents don't need              |
+| `vague-instruction` | info          | "follow best practices", "write clean code", "be consistent" |
 
 ### `select(rules, options)`
 
@@ -256,7 +252,7 @@ All commands support `--path <dir>` to point at a different project root. `lint`
 
 ## Use with Vercel AI SDK / LangChain / Custom Agents
 
-This isn't just for Cursor. If you're building agents with Vercel AI SDK, LangChain, or your own framework - the same problem exists: how much context are you stuffing into the system prompt, and is it helping or hurting?
+This isn't just for Cursor. If you're building agents with Vercel AI SDK, LangChain, or your own framework, ai-context-kit solves the same problem: how much context are you stuffing into the system prompt, and is it helping or hurting?
 
 ```typescript
 import { loadRules, select } from "ai-context-kit";
@@ -284,15 +280,15 @@ Any framework that takes a system prompt string. Any rules stored as markdown fi
 
 ## Supported Formats
 
-| Format | File | Used by |
-|---|---|---|
-| Cursor (modern) | `.cursor/rules/*.mdc` | Cursor IDE |
-| Cursor (legacy) | `.cursorrules` | Cursor IDE |
-| Claude Code | `CLAUDE.md` | Claude Code |
-| AGENTS.md | `AGENTS.md` | Cross-agent standard |
-| GitHub Copilot | `.github/copilot-instructions.md` | GitHub Copilot |
-| Windsurf | `.windsurfrules` | Windsurf |
-| Cline | `.clinerules` | Cline |
+| Format          | File                              | Used by              |
+| --------------- | --------------------------------- | -------------------- |
+| Cursor (modern) | `.cursor/rules/*.mdc`             | Cursor IDE           |
+| Cursor (legacy) | `.cursorrules`                    | Cursor IDE           |
+| Claude Code     | `CLAUDE.md`                       | Claude Code          |
+| AGENTS.md       | `AGENTS.md`                       | Cross-agent standard |
+| GitHub Copilot  | `.github/copilot-instructions.md` | GitHub Copilot       |
+| Windsurf        | `.windsurfrules`                  | Windsurf             |
+| Cline           | `.clinerules`                     | Cline                |
 
 ai-context-kit detects the format from the file path. No configuration needed.
 
@@ -322,7 +318,7 @@ The ETH Zurich study tested both human-written and LLM-generated context files. 
 <details>
 <summary><strong>How accurate is the token estimation?</strong></summary>
 
-ai-context-kit uses a 4-character-per-token approximation. Intentionally simple and fast. Accurate enough for budgeting and comparison (GPT-4 averages ~4 chars/token for English text). If you need exact counts, pipe the output through tiktoken or your model's tokenizer.
+ai-context-kit uses a 4-character-per-token approximation. This is intentionally simple and fast. It's accurate enough for budgeting and comparison (GPT-4 averages ~4 chars/token for English text). If you need exact counts, pipe the output through tiktoken or your model's tokenizer.
 
 </details>
 
