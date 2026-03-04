@@ -1,0 +1,59 @@
+---
+description: Core project context for ai-context-kit
+alwaysApply: true
+---
+
+# ai-context-kit
+
+TypeScript library + CLI that loads, lints, measures, and selects AI agent context files (CLAUDE.md, .cursor/rules/, AGENTS.md, Copilot instructions, etc.).
+
+npm package: `ai-context-kit`. GitHub: `ofershap/ai-context-kit`.
+
+## Architecture
+
+Source is in `src/`, tests mirror in `tests/`. Each module is a single concern:
+
+- `types.ts` - all interfaces and types. `RuleFile` is the core data structure
+- `parse.ts` - YAML frontmatter parsing, format detection from file path
+- `tokens.ts` - token estimation (4 chars per token approximation)
+- `load.ts` - `loadRules()` - finds and loads rule files from disk
+- `measure.ts` - `measure()` - token cost per rule with budget check
+- `lint.ts` - `lint()` - conflict detection, duplicates, vague instructions, scores 0-100
+- `select.ts` - `select()` - task-relevant rule selection within token budget
+- `sync.ts` - `sync()` - write rules to multiple target formats
+- `init.ts` - `init()` - scaffold starter rule files from templates
+- `cli.ts` - CLI entry point, parses args and calls the above functions
+- `index.ts` - public API re-exports
+
+## Key Constraints
+
+- Zero runtime dependencies. Do not add any.
+- `exactOptionalPropertyTypes: true` in tsconfig. Optional props need explicit `| undefined`
+- ESM primary, CJS secondary via tsup dual build
+- CLI binary name in package.json is `ai-context-kit`
+- Format detection is path-based (no config). `.cursor/rules` dir = cursor-rules format, `CLAUDE.md` = claude-md, etc.
+- Token estimation is intentionally approximate (4 chars/token). Don't replace with tiktoken or similar
+
+## Adding a Lint Rule
+
+1. Add detection logic in `src/lint.ts` inside the `lint()` function
+2. Add test cases in `tests/lint.test.ts`
+3. Update the lint rule table in `README.md`
+4. Issue severity must be `error`, `warning`, or `info`
+
+## Adding a Format
+
+1. Add format string to `RuleFormat` union in `src/types.ts`
+2. Add path detection in `detectFormat()` in `src/parse.ts`
+3. Add file patterns in `loadRules()` in `src/load.ts`
+4. Add template in `TEMPLATES` map in `src/init.ts` (optional)
+5. Add test in `tests/load.test.ts`
+
+## Publishing
+
+npm: `NPM_CONFIG_USERCONFIG=/tmp/.npmrc-publish npm publish --access public`
+Always `npm run build` first. Bump version with `npm version patch --no-git-tag-version`.
+
+## CI
+
+GitHub Actions runs lint + typecheck + test on Node 20 and 22. Prettier formatting must pass.

@@ -1,6 +1,6 @@
 {
   "name": "ai-context-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Intelligent context management for AI coding agents. Load, lint, measure, and sync rules across Cursor, Claude Code, Copilot, and any AI tool.",
   "type": "module",
   "exports": {
