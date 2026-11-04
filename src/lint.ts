@@ -88,24 +88,36 @@ function lintConflicts(rules: RuleFile[]): LintIssue[] {
       if (!ruleA || !ruleB) continue;
 
       for (const { positive, negative } of contradictions) {
-        const posMatches = [...ruleA.body.matchAll(new RegExp(positive))];
-        const negMatches = [...ruleB.body.matchAll(new RegExp(negative))];
+        // Check both orderings so detection does not depend on file order
+        // (fixes #40). Once one ordering reports a conflict for this pair,
+        // skip the other to avoid double-reporting the same contradiction.
+        const directions = [
+          [ruleA, ruleB],
+          [ruleB, ruleA],
+        ] as const;
+        let matched = false;
+        for (const [posRule, negRule] of directions) {
+          if (matched) break;
+          const posMatches = [...posRule.body.matchAll(new RegExp(positive))];
+          const negMatches = [...negRule.body.matchAll(new RegExp(negative))];
 
-        for (const pos of posMatches) {
-          for (const neg of negMatches) {
-            const posCapture = pos[1];
-            const negCapture = neg[1];
-            if (
-              posCapture &&
-              negCapture &&
-              posCapture.toLowerCase() === negCapture.toLowerCase()
-            ) {
-              issues.push({
-                rule: "conflict",
-                path: ruleA.path,
-                severity: "error",
-                message: `Conflicts with ${ruleB.path}: "${pos[0]}" vs "${neg[0]}"`,
-              });
+          for (const pos of posMatches) {
+            for (const neg of negMatches) {
+              const posCapture = pos[1];
+              const negCapture = neg[1];
+              if (
+                posCapture &&
+                negCapture &&
+                posCapture.toLowerCase() === negCapture.toLowerCase()
+              ) {
+                matched = true;
+                issues.push({
+                  rule: "conflict",
+                  path: posRule.path,
+                  severity: "error",
+                  message: `Conflicts with ${negRule.path}: "${pos[0]}" vs "${neg[0]}"`,
+                });
+              }
             }
           }
         }
