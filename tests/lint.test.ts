@@ -60,6 +60,24 @@ describe("lint", () => {
     expect(report.issues.some((i) => i.rule === "conflict")).toBe(true);
   });
 
+  it("detects conflicting instructions regardless of file order", () => {
+    const rules = [
+      makeRule("a.md", "Never use semicolons in the codebase."),
+      makeRule("b.md", "Always use semicolons in TypeScript code."),
+    ];
+    const report = lint(rules);
+    expect(report.issues.some((i) => i.rule === "conflict")).toBe(true);
+  });
+
+  it("does not double-report a conflict when both orderings match", () => {
+    const rules = [
+      makeRule("a.md", "Always use semicolons in TypeScript code."),
+      makeRule("b.md", "Never use semicolons in the codebase."),
+    ];
+    const report = lint(rules);
+    expect(report.issues.filter((i) => i.rule === "conflict")).toHaveLength(1);
+  });
+
   it("warns on large directory trees", () => {
     const tree = Array.from({ length: 15 }, (_, i) => `├── file${i}.ts`).join(
       "\n",
