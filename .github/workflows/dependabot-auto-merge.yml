@@ -24,11 +24,12 @@ jobs:
         run: |
           set -euo pipefail
           SHA="${{ github.event.workflow_run.head_sha }}"
-          PR_NUMBER="$(gh pr list --state open --author "dependabot[bot]" --json number,headRefOid --jq ".[] | select(.headRefOid == \"$SHA\") | .number" | head -n1)"
+          PR_NUMBER="$(gh pr list --repo "$REPO" --state open --author "dependabot[bot]" --json number,headRefOid --jq ".[] | select(.headRefOid == \"$SHA\") | .number" | head -n1)"
           if [ -z "$PR_NUMBER" ]; then
             echo "No open dependabot PR at $SHA - nothing to merge."
             exit 0
           fi
-          gh pr merge "$PR_NUMBER" --squash --match-head-commit "$SHA"
+          gh pr merge --repo "$REPO" "$PR_NUMBER" --squash --match-head-commit "$SHA"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
