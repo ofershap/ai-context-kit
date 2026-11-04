@@ -1,18 +1,34 @@
 name: Dependabot Auto-Merge
 
-on: pull_request
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
 
 permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: dependabot-auto-merge
+  cancel-in-progress: false
+
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
     steps:
-      - uses: actions/checkout@v7
-      - run: gh pr merge --auto --squash "$PR_URL"
+      - name: Merge dependabot PR whose head commit just went green
+        run: |
+          set -euo pipefail
+          SHA="${{ github.event.workflow_run.head_sha }}"
+          PR_NUMBER="$(gh pr list --state open --author "dependabot[bot]" --json number,headRefOid --jq ".[] | select(.headRefOid == \"$SHA\") | .number" | head -n1)"
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No open dependabot PR at $SHA - nothing to merge."
+            exit 0
+          fi
+          gh pr merge "$PR_NUMBER" --squash --match-head-commit "$SHA"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
